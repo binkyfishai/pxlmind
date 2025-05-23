@@ -1,0 +1,124 @@
+<!-- Pixelated Loader Component -->
+<div id="loader" class="loader-container">
+    <div class="loader-content">
+        <div class="pixel-loader">
+            <div class="pixel-block" style="--delay: 0s; --x: 0; --y: 0;"></div>
+            <div class="pixel-block" style="--delay: 0.1s; --x: 1; --y: 0;"></div>
+            <div class="pixel-block" style="--delay: 0.2s; --x: 2; --y: 0;"></div>
+            <div class="pixel-block" style="--delay: 0.3s; --x: 0; --y: 1;"></div>
+            <div class="pixel-block" style="--delay: 0.4s; --x: 1; --y: 1;"></div>
+            <div class="pixel-block" style="--delay: 0.5s; --x: 2; --y: 1;"></div>
+            <div class="pixel-block" style="--delay: 0.6s; --x: 0; --y: 2;"></div>
+            <div class="pixel-block" style="--delay: 0.7s; --x: 1; --y: 2;"></div>
+            <div class="pixel-block" style="--delay: 0.8s; --x: 2; --y: 2;"></div>
+        </div>
+        <div class="loader-text">
+            <span class="loading-text">Loading PixelMind</span>
+            <span class="loading-dots">
+                <span>.</span>
+                <span>.</span>
+                <span>.</span>
+            </span>
+        </div>
+    </div>
+</div>
+
+<style>
+.loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--dark-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.loader-container.hide {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-content {
+    text-align: center;
+}
+
+.pixel-loader {
+    width: 90px;
+    height: 90px;
+    position: relative;
+    margin: 0 auto 30px;
+}
+
+.pixel-block {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    left: calc(var(--x) * 30px);
+    top: calc(var(--y) * 30px);
+    animation: pixelPulse 1.5s ease-in-out infinite;
+    animation-delay: var(--delay);
+    border-radius: 4px;
+    box-shadow: 
+        0 0 10px rgba(0, 255, 204, 0.5),
+        inset 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+@keyframes pixelPulse {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 0.3;
+    }
+    50% {
+        transform: scale(1.2) rotate(180deg);
+        opacity: 1;
+        box-shadow: 
+            0 0 20px rgba(0, 255, 204, 0.8),
+            inset 0 0 20px rgba(255, 255, 255, 0.5);
+    }
+}
+
+.loader-text {
+    font-family: var(--font-accent);
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.loading-dots span {
+    display: inline-block;
+    animation: dotPulse 1.5s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(1) { animation-delay: 0s; }
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotPulse {
+    0%, 100% {
+        transform: translateY(0);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translateY(-10px);
+        opacity: 1;
+    }
+}
+</style>
+
+<script>
+// Auto-hide loader after content loads
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        document.getElementById('loader').classList.add('hide');
+    }, 1500);
+});
+</script> 

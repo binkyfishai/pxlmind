@@ -1,0 +1,450 @@
+/* ===== CSS Variables ===== */
+:root {
+    /* Colors - Enhanced palette */
+    --primary-color: #00ffcc;
+    --secondary-color: #ff00ff;
+    --accent-color: #ffff00;
+    --dark-bg: #0a0a0f;
+    --darker-bg: #050508;
+    --light-bg: #1a1a2e;
+    --text-primary: #ffffff;
+    --text-secondary: #b8b8c8;
+    --text-muted: #6c6c7c;
+    
+    /* Pixel Colors */
+    --pixel-blue: #00d4ff;
+    --pixel-green: #00ff88;
+    --pixel-pink: #ff0088;
+    --pixel-purple: #8800ff;
+    --pixel-yellow: #ffdd00;
+    --pixel-orange: #ff8800;
+    
+    /* Toned down gradient colors */
+    --gradient-1: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+    --gradient-2: linear-gradient(135deg, rgba(240, 147, 251, 0.2) 0%, rgba(245, 87, 108, 0.2) 100%);
+    --gradient-3: linear-gradient(135deg, rgba(79, 172, 254, 0.3) 0%, rgba(0, 242, 254, 0.3) 100%);
+    --gradient-4: linear-gradient(135deg, rgba(67, 233, 123, 0.3) 0%, rgba(56, 249, 215, 0.3) 100%);
+    
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+    --spacing-xl: 4rem;
+    --spacing-xxl: 6rem;
+    
+    /* Typography */
+    --font-primary: 'Space Grotesk', sans-serif;
+    --font-accent: 'Orbitron', monospace;
+    
+    /* Effects */
+    --pixel-size: 4px;
+    --glow-intensity: 0 0 20px;
+    --shadow-color: rgba(0, 255, 204, 0.3);
+    --shadow-hover: rgba(0, 255, 204, 0.5);
+    
+    /* Animations */
+    --transition-fast: 0.2s ease;
+    --transition-medium: 0.3s ease;
+    --transition-slow: 0.6s ease;
+}
+
+/* ===== Global Styles ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><rect x="8" y="8" width="4" height="4" fill="%2300ffcc"/></svg>') 10 10, auto;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--dark-bg);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    line-height: 1.6;
+    position: relative;
+}
+
+/* Toned down background with animated gradient */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 255, 204, 0.01) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 255, 0.01) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(255, 255, 0, 0.01) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    position: relative;
+    z-index: 2;
+}
+
+/* ===== Typography with enhanced styles ===== */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-accent);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.section-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    margin-bottom: var(--spacing-sm);
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+/* Simplified underline for section titles */
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: var(--primary-color);
+    opacity: 0.6;
+}
+
+.section-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    opacity: 0.9;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 8s ease infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* ===== Enhanced Navigation Bar ===== */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(10, 10, 15, 0.95);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    z-index: 1000;
+    padding: var(--spacing-sm) 0;
+    transition: all var(--transition-medium);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar.scrolled {
+    padding: calc(var(--spacing-sm) * 0.7) 0;
+    background: rgba(10, 10, 15, 0.98);
+    border-bottom: 2px solid var(--primary-color);
+    box-shadow: 
+        0 4px 20px rgba(0, 255, 204, 0.2),
+        0 0 40px rgba(0, 255, 204, 0.1);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    cursor: pointer;
+    transition: transform var(--transition-medium);
+    flex-shrink: 0;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    position: relative;
+}
+
+.pixel-brain {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    clip-path: polygon(
+        20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 
+        20% 100%, 0% 80%, 0% 20%
+    );
+    animation: pulse 2s ease-in-out infinite;
+    box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+}
+
+@keyframes pulse {
+    0%, 100% { 
+        transform: scale(1) rotate(0deg); 
+        box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+    }
+    50% { 
+        transform: scale(1.05) rotate(180deg); 
+        box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+    }
+}
+
+.logo-text {
+    font-family: var(--font-accent);
+    font-size: 1.25rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    transition: all var(--transition-medium);
+    padding: 8px 12px;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 0.95rem;
+}
+
+/* Simplified nav link hover effect */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transition: width var(--transition-medium);
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--primary-color);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+.nav-cta {
+    background: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    border-radius: 4px;
+}
+
+/* ===== Problem Section Fixes ===== */
+.problem-section {
+    padding: var(--spacing-xxl) 0;
+    background: var(--darker-bg);
+    position: relative;
+}
+
+.problem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.problem-card {
+    background: var(--light-bg);
+    padding: var(--spacing-lg);
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-medium);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Much more subtle gradient effect */
+.problem-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, transparent, rgba(255, 0, 136, 0.05));
+    opacity: 0;
+    transition: opacity var(--transition-medium);
+}
+
+.problem-card::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, 
+        rgba(255, 0, 136, 0.3), 
+        rgba(136, 0, 255, 0.3), 
+        rgba(0, 212, 255, 0.3));
+    z-index: -1;
+    opacity: 0;
+    transition: opacity var(--transition-medium);
+    border-radius: 8px;
+}
+
+.problem-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--pixel-pink);
+    box-shadow: 0 10px 30px rgba(255, 0, 136, 0.2);
+}
+
+.problem-card:hover::before {
+    opacity: 1;
+}
+
+.problem-card:hover::after {
+    opacity: 1;
+}
+
+.problem-icon {
+    font-size: 3rem;
+    color: var(--pixel-pink);
+    margin-bottom: var(--spacing-md);
+    transition: transform var(--transition-medium);
+}
+
+.problem-card:hover .problem-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.problem-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-primary);
+}
+
+.problem-card p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* ===== Responsive Design Fixes ===== */
+@media (max-width: 768px) {
+    .nav-container {
+        padding: 0 var(--spacing-sm);
+    }
+    
+    .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: 70px;
+        flex-direction: column;
+        background-color: var(--dark-bg);
+        width: 100%;
+        text-align: center;
+        transition: var(--transition-medium);
+        box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+        padding: var(--spacing-lg) 0;
+        border-top: 2px solid var(--primary-color);
+        gap: var(--spacing-sm);
+    }
+
+    .nav-menu.active {
+        left: 0;
+    }
+
+    .nav-link {
+        padding: var(--spacing-sm);
+        font-size: 1.1rem;
+        width: 100%;
+    }
+
+    .nav-cta {
+        margin-top: var(--spacing-sm);
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(1) {
+        transform: translateY(9px) rotate(45deg);
+    }
+
+    .hamburger.active span:nth-child(3) {
+        transform: translateY(-9px) rotate(-45deg);
+    }
+
+    .logo-text {
+        font-size: 1.1rem;
+    }
+
+    .problem-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-container {
+        gap: var(--spacing-sm);
+    }
+    
+    .logo-text {
+        font-size: 1rem;
+    }
+    
+    .nav-menu {
+        gap: var(--spacing-xs);
+    }
+} 
