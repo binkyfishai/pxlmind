@@ -1,664 +1,693 @@
-// ===== Navigation Scroll Effect =====
-let lastScrollTop = 0;
-window.addEventListener('scroll', () => {
+// ===== Global Variables =====
+let scene, camera, renderer, brain, particles = [];
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let lastScrollY = window.scrollY;
+let scrollDirection = 'up';
+
+// ===== Loader =====
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        const loader = document.getElementById('loader');
+        if (loader) {
+            loader.classList.add('hide');
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 500);
+        }
+    }, 1500);
+});
+
+// ===== Navbar Scroll Effect =====
+function handleNavbarScroll() {
     const navbar = document.getElementById('navbar');
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (!navbar) return;
     
-    // Add scrolled class
-    if (scrollTop > 50) {
+    const currentScrollY = window.scrollY;
+    scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
+    
+    if (currentScrollY > 100) {
         navbar.classList.add('scrolled');
     } else {
         navbar.classList.remove('scrolled');
     }
     
-    // Hide/show navbar on scroll
-    if (scrollTop > lastScrollTop && scrollTop > 100) {
-        navbar.style.transform = 'translateY(-100%)';
-    } else {
-        navbar.style.transform = 'translateY(0)';
-    }
-    lastScrollTop = scrollTop;
-});
-
-// ===== Mobile Menu Toggle =====
-const hamburger = document.getElementById('hamburger');
-const navMenu = document.getElementById('nav-menu');
-
-hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    navMenu.classList.toggle('active');
-    
-    // Animate menu items
-    const navLinks = navMenu.querySelectorAll('.nav-link');
-    navLinks.forEach((link, index) => {
-        if (navMenu.classList.contains('active')) {
-            link.style.animation = `fadeInUp 0.5s ease forwards ${index * 0.1}s`;
-        } else {
-            link.style.animation = '';
-        }
-    });
-});
-
-// Close mobile menu when clicking on a link
-document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-        hamburger.classList.remove('active');
-        navMenu.classList.remove('active');
-    });
-});
-
-// ===== Active Navigation Link =====
-const sections = document.querySelectorAll('section[id]');
-const navLinks = document.querySelectorAll('.nav-link');
-
-window.addEventListener('scroll', () => {
-    let current = '';
-    
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (scrollY >= (sectionTop - 200)) {
-            current = section.getAttribute('id');
-        }
-    });
-
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href').slice(1) === current) {
-            link.classList.add('active');
-        }
-    });
-});
-
-// ===== Enhanced Parallax Effect for Floating Pixels =====
-const floatingPixels = document.querySelectorAll('.pixel-cube');
-let mouseX = 0;
-let mouseY = 0;
-let currentX = 0;
-let currentY = 0;
-
-window.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX / window.innerWidth;
-    mouseY = e.clientY / window.innerHeight;
-});
-
-function animatePixels() {
-    currentX += (mouseX - currentX) * 0.1;
-    currentY += (mouseY - currentY) * 0.1;
-    
-    floatingPixels.forEach((pixel, index) => {
-        const speed = pixel.getAttribute('data-speed');
-        const xOffset = (currentX - 0.5) * speed * 100;
-        const yOffset = (currentY - 0.5) * speed * 100;
-        const rotation = (currentX * 360) + (index * 90);
-        
-        pixel.style.transform = `translate(${xOffset}px, ${yOffset}px) rotate(${rotation}deg)`;
-    });
-    
-    requestAnimationFrame(animatePixels);
+    lastScrollY = currentScrollY;
 }
 
-animatePixels();
-
-// ===== Enhanced Three.js 3D Visualization =====
-function initThreeJS() {
-    const container = document.getElementById('hero-canvas');
-    if (!container) return;
-
-    // Scene setup
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ 
-        canvas: container, 
-        alpha: true,
-        antialias: true 
-    });
-    
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
-
-    // Create enhanced pixelated brain geometry
-    const createPixelBrain = () => {
-        const group = new THREE.Group();
-        
-        // Brain core with multiple layers
-        const coreGeometry = new THREE.BoxGeometry(2, 2, 2);
-        const coreMaterial = new THREE.MeshPhongMaterial({
-            color: 0x00ffcc,
-            emissive: 0x00ffcc,
-            emissiveIntensity: 0.2,
-            shininess: 100,
-            transparent: true,
-            opacity: 0.9
-        });
-        const core = new THREE.Mesh(coreGeometry, coreMaterial);
-        group.add(core);
-        
-        // Inner glowing core
-        const innerCoreGeometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
-        const innerCoreMaterial = new THREE.MeshBasicMaterial({
-            color: 0xffffff,
-            transparent: true,
-            opacity: 0.3
-        });
-        const innerCore = new THREE.Mesh(innerCoreGeometry, innerCoreMaterial);
-        group.add(innerCore);
-
-        // Pixel particles with enhanced movement
-        const particleCount = 80;
-        const particles = [];
-        
-        for (let i = 0; i < particleCount; i++) {
-            const size = 0.05 + Math.random() * 0.1;
-            const particleGeometry = new THREE.BoxGeometry(size, size, size);
-            const hue = Math.random();
-            const particleMaterial = new THREE.MeshPhongMaterial({
-                color: new THREE.Color().setHSL(hue, 1, 0.5),
-                emissive: new THREE.Color().setHSL(hue, 1, 0.5),
-                emissiveIntensity: 0.5,
-                transparent: true,
-                opacity: 0.8
-            });
-            
-            const particle = new THREE.Mesh(particleGeometry, particleMaterial);
-            
-            // Random position in sphere around core
-            const theta = Math.random() * Math.PI * 2;
-            const phi = Math.random() * Math.PI;
-            const radius = 2 + Math.random() * 1.5;
-            
-            particle.position.x = radius * Math.sin(phi) * Math.cos(theta);
-            particle.position.y = radius * Math.sin(phi) * Math.sin(theta);
-            particle.position.z = radius * Math.cos(phi);
-            
-            particle.userData = {
-                originalPosition: particle.position.clone(),
-                speed: 0.5 + Math.random() * 0.5,
-                offset: Math.random() * Math.PI * 2,
-                orbitRadius: 0.3 + Math.random() * 0.5,
-                rotationSpeed: (Math.random() - 0.5) * 0.05
-            };
-            
-            particles.push(particle);
-            group.add(particle);
-        }
-        
-        // Add connecting lines between particles
-        const lineMaterial = new THREE.LineBasicMaterial({
-            color: 0x00ffcc,
-            transparent: true,
-            opacity: 0.2
-        });
-        
-        for (let i = 0; i < 20; i++) {
-            const geometry = new THREE.BufferGeometry();
-            const positions = new Float32Array(6);
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            const line = new THREE.Line(geometry, lineMaterial);
-            line.userData = { particles: [particles[Math.floor(Math.random() * particles.length)], particles[Math.floor(Math.random() * particles.length)]] };
-            group.add(line);
-        }
-        
-        group.userData = { particles, lines: group.children.filter(child => child.type === 'Line') };
-        return group;
-    };
-
-    const brain = createPixelBrain();
-    scene.add(brain);
-
-    // Enhanced lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
-    scene.add(ambientLight);
-
-    const pointLight1 = new THREE.PointLight(0x00ffcc, 1.5);
-    pointLight1.position.set(5, 5, 5);
-    scene.add(pointLight1);
-
-    const pointLight2 = new THREE.PointLight(0xff00ff, 1.5);
-    pointLight2.position.set(-5, -5, 5);
-    scene.add(pointLight2);
-    
-    const pointLight3 = new THREE.PointLight(0xffff00, 0.8);
-    pointLight3.position.set(0, 0, -5);
-    scene.add(pointLight3);
-
-    // Camera position
-    camera.position.z = 5;
-
-    // Mouse interaction
-    let mouseThreeX = 0;
-    let mouseThreeY = 0;
-    
-    container.addEventListener('mousemove', (e) => {
-        const rect = container.getBoundingClientRect();
-        mouseThreeX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-        mouseThreeY = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-    });
-
-    // Animation
-    let time = 0;
-    
-    function animate() {
-        requestAnimationFrame(animate);
-        time += 0.01;
-
-        // Rotate brain with mouse influence
-        brain.rotation.x += 0.005 + mouseThreeY * 0.01;
-        brain.rotation.y += 0.01 + mouseThreeX * 0.01;
-        
-        // Pulsating core
-        const pulseFactor = 1 + Math.sin(time * 2) * 0.1;
-        brain.children[0].scale.set(pulseFactor, pulseFactor, pulseFactor);
-
-        // Animate particles with enhanced movement
-        brain.userData.particles.forEach((particle, index) => {
-            const { originalPosition, speed, offset, orbitRadius, rotationSpeed } = particle.userData;
-            
-            // Orbital motion
-            const orbitAngle = time * speed + offset;
-            particle.position.x = originalPosition.x + Math.sin(orbitAngle) * orbitRadius;
-            particle.position.y = originalPosition.y + Math.cos(orbitAngle) * orbitRadius;
-            particle.position.z = originalPosition.z + Math.sin(orbitAngle * 0.5) * orbitRadius;
-            
-            // Individual rotation
-            particle.rotation.x += rotationSpeed;
-            particle.rotation.y += rotationSpeed * 1.5;
-            particle.rotation.z += rotationSpeed * 0.5;
-            
-            // Pulsating opacity
-            particle.material.opacity = 0.5 + Math.sin(time * 2 + offset) * 0.3;
-        });
-        
-        // Update connecting lines
-        brain.userData.lines.forEach(line => {
-            const positions = line.geometry.attributes.position.array;
-            const [p1, p2] = line.userData.particles;
-            positions[0] = p1.position.x;
-            positions[1] = p1.position.y;
-            positions[2] = p1.position.z;
-            positions[3] = p2.position.x;
-            positions[4] = p2.position.y;
-            positions[5] = p2.position.z;
-            line.geometry.attributes.position.needsUpdate = true;
-        });
-
-        renderer.render(scene, camera);
-    }
-
-    animate();
-
-    // Handle resize
-    window.addEventListener('resize', () => {
-        const width = container.clientWidth;
-        const height = container.clientHeight;
-        
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-        
-        renderer.setSize(width, height);
-    });
-}
-
-// Initialize Three.js when DOM is loaded
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initThreeJS);
-} else {
-    initThreeJS();
-}
-
-// ===== Enhanced Intersection Observer for Animations =====
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('animate-in');
-            
-            // Add stagger effect for grid items
-            if (entry.target.classList.contains('problem-card') || 
-                entry.target.classList.contains('advantage-card') || 
-                entry.target.classList.contains('showcase-card')) {
-                const cards = entry.target.parentElement.querySelectorAll('.animate-in');
-                const index = Array.from(cards).indexOf(entry.target);
-                entry.target.style.animationDelay = `${index * 0.1}s`;
-            }
-        }
-    });
-}, observerOptions);
-
-// Observe all cards and sections
-document.querySelectorAll('.problem-card, .advantage-card, .showcase-card, .tech-item, .feature-card').forEach(el => {
-    observer.observe(el);
-});
-
-// ===== Smooth Scroll for CTA Buttons =====
-document.querySelectorAll('.cta-button').forEach(button => {
-    button.addEventListener('click', (e) => {
-        // Add ripple effect
-        const ripple = document.createElement('span');
-        ripple.classList.add('ripple');
-        button.appendChild(ripple);
-        
-        const rect = button.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = e.clientX - rect.left - size / 2;
-        const y = e.clientY - rect.top - size / 2;
-        
-        ripple.style.width = ripple.style.height = size + 'px';
-        ripple.style.left = x + 'px';
-        ripple.style.top = y + 'px';
-        
-        setTimeout(() => ripple.remove(), 600);
-        
-        // Handle button actions
-        if (button.textContent.includes('Try It Now') || button.textContent.includes('Try Explainer')) {
-            e.preventDefault();
-            showNotification('PixelMind Explainer Demo - Coming Soon!', 'info');
-        } else if (button.textContent.includes('Watch Demo')) {
-            e.preventDefault();
-            showNotification('Demo Video - Coming Soon!', 'info');
-        }
-    });
-});
-
-// ===== Custom Notification System =====
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.innerHTML = `
-        <div class="notification-content">
-            <i class="fas fa-${type === 'info' ? 'info-circle' : 'check-circle'}"></i>
-            <span>${message}</span>
-        </div>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Trigger animation
-    setTimeout(() => notification.classList.add('show'), 10);
-    
-    // Remove notification
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
-}
-
-// ===== Add CSS animations dynamically =====
-const style = document.createElement('style');
-style.textContent = `
-    .animate-in {
-        animation: fadeInUp 0.6s ease-out forwards;
-    }
-    
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    .problem-card,
-    .advantage-card,
-    .showcase-card,
-    .tech-item,
-    .feature-card {
-        opacity: 0;
-    }
-    
-    /* Ripple Effect */
-    .cta-button {
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .ripple {
-        position: absolute;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.5);
-        transform: scale(0);
-        animation: ripple 0.6s ease-out;
-    }
-    
-    @keyframes ripple {
-        to {
-            transform: scale(4);
-            opacity: 0;
-        }
-    }
-    
-    /* Notification Styles */
-    .notification {
-        position: fixed;
-        top: 100px;
-        right: -400px;
-        background: var(--light-bg);
-        border-left: 4px solid var(--primary-color);
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        transition: right 0.3s ease;
-        z-index: 10000;
-        max-width: 350px;
-    }
-    
-    .notification.show {
-        right: 20px;
-    }
-    
-    .notification-content {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-    
-    .notification i {
-        font-size: 1.5rem;
-        color: var(--primary-color);
-    }
-    
-    /* Mobile menu animations */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-`;
-document.head.appendChild(style);
-
-// ===== Enhanced Pixel Rain Effect =====
-function createPixelRain() {
-    const pixelRainContainer = document.createElement('div');
-    pixelRainContainer.className = 'pixel-rain';
-    pixelRainContainer.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 1;
-        overflow: hidden;
-    `;
-    
-    // Create multiple layers of rain for depth
-    for (let layer = 0; layer < 3; layer++) {
-        for (let i = 0; i < 10; i++) {
-            const pixel = document.createElement('div');
-            const size = 4 - layer; // Smaller pixels in background
-            const duration = 5 + Math.random() * 5 + layer * 2; // Slower in background
-            const delay = Math.random() * 5;
-            const opacity = (0.3 + Math.random() * 0.4) * (1 - layer * 0.3);
-            
-            pixel.style.cssText = `
-                position: absolute;
-                width: ${size}px;
-                height: ${size}px;
-                background: linear-gradient(45deg, #00ffcc, #ff00ff);
-                top: -10px;
-                left: ${Math.random() * 100}%;
-                animation: pixelFall ${duration}s linear infinite;
-                animation-delay: ${delay}s;
-                opacity: ${opacity};
-                filter: blur(${layer * 0.5}px);
-            `;
-            pixelRainContainer.appendChild(pixel);
-        }
-    }
-    
-    document.body.appendChild(pixelRainContainer);
-    
-    // Add animation
-    const rainStyle = document.createElement('style');
-    rainStyle.textContent = `
-        @keyframes pixelFall {
-            to {
-                transform: translateY(100vh) rotate(360deg);
-            }
-        }
-    `;
-    document.head.appendChild(rainStyle);
-}
-
-// Enable pixel rain on larger screens only
-if (window.innerWidth > 768) {
-    createPixelRain();
-}
-
-// ===== Cursor Trail Effect =====
-function createCursorTrail() {
-    const trail = document.createElement('div');
-    trail.style.cssText = `
-        position: fixed;
-        width: 20px;
-        height: 20px;
-        background: radial-gradient(circle, var(--primary-color), transparent);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9998;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    `;
-    document.body.appendChild(trail);
-    
-    let mouseX = 0;
-    let mouseY = 0;
-    let trailX = 0;
-    let trailY = 0;
-    
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        trail.style.opacity = '0.5';
-    });
-    
-    document.addEventListener('mouseout', () => {
-        trail.style.opacity = '0';
-    });
-    
-    function animateTrail() {
-        trailX += (mouseX - trailX) * 0.1;
-        trailY += (mouseY - trailY) * 0.1;
-        
-        trail.style.left = trailX - 10 + 'px';
-        trail.style.top = trailY - 10 + 'px';
-        
-        requestAnimationFrame(animateTrail);
-    }
-    
-    animateTrail();
-}
-
-// Enable cursor trail on desktop
-if (window.innerWidth > 1024) {
-    createCursorTrail();
-}
-
-// ===== Loading Animation =====
-window.addEventListener('load', () => {
-    // Hide loader with animation
-    setTimeout(() => {
-        const loader = document.getElementById('loader');
-        if (loader) {
-            loader.classList.add('hide');
-        }
-        document.body.classList.add('loaded');
-        
-        // Animate hero content on load
-        const heroTitle = document.querySelector('.hero-title');
-        const heroSubtitle = document.querySelector('.hero-subtitle');
-        const heroButtons = document.querySelector('.hero-buttons');
-        
-        if (heroTitle) {
-            heroTitle.style.animation = 'fadeInUp 1s ease-out 0.5s forwards';
-            heroTitle.style.opacity = '0';
-        }
-        if (heroSubtitle) {
-            heroSubtitle.style.animation = 'fadeInUp 1s ease-out 0.7s forwards';
-            heroSubtitle.style.opacity = '0';
-        }
-        if (heroButtons) {
-            heroButtons.style.animation = 'fadeInUp 1s ease-out 0.9s forwards';
-            heroButtons.style.opacity = '0';
-        }
-    }, 1500);
-});
-
-// ===== Performance Optimization =====
-// Throttle scroll events
+// Throttled scroll handler
 let scrollTimeout;
 window.addEventListener('scroll', () => {
     if (scrollTimeout) {
-        window.cancelAnimationFrame(scrollTimeout);
+        clearTimeout(scrollTimeout);
     }
-    scrollTimeout = window.requestAnimationFrame(() => {
-        // Scroll-based animations here
-    });
+    scrollTimeout = setTimeout(handleNavbarScroll, 16); // ~60fps
 });
 
-// ===== Easter Egg: Konami Code =====
-const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-let konamiIndex = 0;
+// ===== Mobile Menu Toggle =====
+function initMobileMenu() {
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+    
+    if (!hamburger || !navMenu) return;
+    
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+    
+    // Close menu when clicking on a link
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        });
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        }
+    });
+}
 
-document.addEventListener('keydown', (e) => {
-    if (e.key === konamiCode[konamiIndex]) {
-        konamiIndex++;
-        if (konamiIndex === konamiCode.length) {
-            activateEasterEgg();
-            konamiIndex = 0;
+// ===== Active Navigation Links =====
+function updateActiveNavLink() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.getAttribute('id');
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${id}`) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+    }, {
+        threshold: 0.3
+    });
+    
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+}
+
+// ===== 3D Interactive Mind Map =====
+function init3DBrain() {
+    const canvas = document.getElementById('hero-canvas');
+    if (!canvas) return;
+    
+    const container = canvas.parentElement;
+    const width = container.offsetWidth;
+    const height = container.offsetHeight;
+    
+    // Scene setup
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+    renderer = new THREE.WebGLRenderer({ 
+        canvas: canvas, 
+        antialias: true,
+        alpha: true 
+    });
+    
+    renderer.setSize(width, height);
+    renderer.setClearColor(0x000000, 0);
+    
+    // Create mind map group
+    const mindMapGroup = new THREE.Group();
+    
+    // Colors for different node types
+    const colors = {
+        central: 0x00ffcc,
+        primary: 0xff00ff,
+        secondary: 0xffff00,
+        tertiary: 0x00d4ff
+    };
+    
+    // Node creation function
+    function createNode(size, color, wireframe = false) {
+        const geometry = new THREE.OctahedronGeometry(size, 1);
+        const material = new THREE.MeshBasicMaterial({ 
+            color: color,
+            wireframe: wireframe,
+            transparent: true,
+            opacity: wireframe ? 0.8 : 0.9
+        });
+        return new THREE.Mesh(geometry, material);
+    }
+    
+    // Create central node
+    const centralNode = createNode(0.5, colors.central);
+    centralNode.position.set(0, 0, 0);
+    mindMapGroup.add(centralNode);
+    
+    // Create primary nodes (main branches)
+    const primaryNodes = [];
+    const primaryPositions = [
+        { x: 2, y: 1, z: 1 },
+        { x: -1.5, y: 2, z: 0.5 },
+        { x: 1, y: -1.5, z: 2 },
+        { x: -2, y: 0, z: -1.5 },
+        { x: 0.5, y: 1.8, z: -2 }
+    ];
+    
+    primaryPositions.forEach((pos, index) => {
+        const node = createNode(0.3, colors.primary, true);
+        node.position.set(pos.x, pos.y, pos.z);
+        primaryNodes.push(node);
+        mindMapGroup.add(node);
+        
+        // Connect to central node
+        const points = [
+            new THREE.Vector3(0, 0, 0),
+            new THREE.Vector3(pos.x, pos.y, pos.z)
+        ];
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        const material = new THREE.LineBasicMaterial({ 
+            color: colors.central, 
+            transparent: true,
+            opacity: 0.6
+        });
+        const line = new THREE.Line(geometry, material);
+        mindMapGroup.add(line);
+    });
+    
+    // Create secondary nodes (sub-branches)
+    const secondaryNodes = [];
+    primaryNodes.forEach((primaryNode, primaryIndex) => {
+        const numSecondary = 2 + Math.floor(Math.random() * 2); // 2-3 secondary nodes per primary
+        
+        for (let i = 0; i < numSecondary; i++) {
+            const angle = (i / numSecondary) * Math.PI * 2;
+            const distance = 1 + Math.random() * 0.5;
+            
+            const offsetX = Math.cos(angle) * distance;
+            const offsetY = Math.sin(angle) * distance * 0.5;
+            const offsetZ = (Math.random() - 0.5) * distance;
+            
+            const secondaryPos = {
+                x: primaryNode.position.x + offsetX,
+                y: primaryNode.position.y + offsetY,
+                z: primaryNode.position.z + offsetZ
+            };
+            
+            const node = createNode(0.15, colors.secondary);
+            node.position.set(secondaryPos.x, secondaryPos.y, secondaryPos.z);
+            secondaryNodes.push(node);
+            mindMapGroup.add(node);
+            
+            // Connect to primary node
+            const points = [
+                new THREE.Vector3(primaryNode.position.x, primaryNode.position.y, primaryNode.position.z),
+                new THREE.Vector3(secondaryPos.x, secondaryPos.y, secondaryPos.z)
+            ];
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineBasicMaterial({ 
+                color: colors.primary, 
+                transparent: true,
+                opacity: 0.4
+            });
+            const line = new THREE.Line(geometry, material);
+            mindMapGroup.add(line);
+        }
+    });
+    
+    // Create some tertiary nodes (detail nodes)
+    secondaryNodes.forEach((secondaryNode, index) => {
+        if (Math.random() > 0.6) { // Only some secondary nodes have tertiary
+            const distance = 0.6 + Math.random() * 0.3;
+            const angle = Math.random() * Math.PI * 2;
+            
+            const tertiaryPos = {
+                x: secondaryNode.position.x + Math.cos(angle) * distance,
+                y: secondaryNode.position.y + (Math.random() - 0.5) * 0.5,
+                z: secondaryNode.position.z + Math.sin(angle) * distance
+            };
+            
+            const node = createNode(0.08, colors.tertiary);
+            node.position.set(tertiaryPos.x, tertiaryPos.y, tertiaryPos.z);
+            mindMapGroup.add(node);
+            
+            // Connect to secondary node
+            const points = [
+                new THREE.Vector3(secondaryNode.position.x, secondaryNode.position.y, secondaryNode.position.z),
+                new THREE.Vector3(tertiaryPos.x, tertiaryPos.y, tertiaryPos.z)
+            ];
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineBasicMaterial({ 
+                color: colors.secondary, 
+                transparent: true,
+                opacity: 0.3
+            });
+            const line = new THREE.Line(geometry, material);
+            mindMapGroup.add(line);
+        }
+    });
+    
+    // Add some cross-connections between nodes
+    for (let i = 0; i < 3; i++) {
+        const node1 = primaryNodes[Math.floor(Math.random() * primaryNodes.length)];
+        const node2 = primaryNodes[Math.floor(Math.random() * primaryNodes.length)];
+        
+        if (node1 !== node2) {
+            const points = [
+                new THREE.Vector3(node1.position.x, node1.position.y, node1.position.z),
+                new THREE.Vector3(node2.position.x, node2.position.y, node2.position.z)
+            ];
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineBasicMaterial({ 
+                color: colors.tertiary, 
+                transparent: true,
+                opacity: 0.2
+            });
+            const line = new THREE.Line(geometry, material);
+            mindMapGroup.add(line);
+        }
+    }
+    
+    scene.add(mindMapGroup);
+    camera.position.z = 6;
+    
+    // Mouse interaction variables
+    let isMouseDown = false;
+    let mouseX = 0;
+    let mouseY = 0;
+    let targetRotationX = 0;
+    let targetRotationY = 0;
+    let currentRotationX = 0;
+    let currentRotationY = 0;
+    
+    // Animation loop
+    function animate() {
+        requestAnimationFrame(animate);
+        
+        // Smooth rotation interpolation
+        currentRotationX += (targetRotationX - currentRotationX) * 0.05;
+        currentRotationY += (targetRotationY - currentRotationY) * 0.05;
+        
+        // Apply rotation to mind map group
+        mindMapGroup.rotation.x = currentRotationX;
+        mindMapGroup.rotation.y = currentRotationY;
+        
+        // Auto-rotation when not interacting
+        if (!isMouseDown) {
+            targetRotationY += 0.004;
+        }
+        
+        // Animate nodes with gentle pulsing
+        mindMapGroup.children.forEach((child, index) => {
+            if (child.type === 'Mesh') {
+                // Gentle pulsing effect
+                const pulse = 1 + Math.sin(Date.now() * 0.002 + index * 0.5) * 0.1;
+                child.scale.setScalar(pulse);
+                
+                // Gentle floating
+                child.position.y += Math.sin(Date.now() * 0.001 + index) * 0.001;
+            }
+        });
+        
+        renderer.render(scene, camera);
+    }
+    
+    animate();
+    
+    // Mouse/touch interaction
+    function onMouseDown(event) {
+        isMouseDown = true;
+        canvas.style.cursor = 'grabbing';
+    }
+    
+    function onMouseUp(event) {
+        isMouseDown = false;
+        canvas.style.cursor = 'grab';
+    }
+    
+    function onMouseMove(event) {
+        const rect = canvas.getBoundingClientRect();
+        const newMouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        const newMouseY = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        
+        if (isMouseDown) {
+            targetRotationY += (newMouseX - mouseX) * 2;
+            targetRotationX += (newMouseY - mouseY) * 2;
+        } else {
+            // Subtle hover effect
+            targetRotationY += (newMouseX - mouseX) * 0.1;
+            targetRotationX += (newMouseY - mouseY) * 0.1;
+        }
+        
+        mouseX = newMouseX;
+        mouseY = newMouseY;
+    }
+    
+    // Add event listeners
+    canvas.addEventListener('mousedown', onMouseDown);
+    canvas.addEventListener('mouseup', onMouseUp);
+    canvas.addEventListener('mousemove', onMouseMove);
+    canvas.addEventListener('mouseleave', onMouseUp);
+    
+    // Touch events for mobile
+    canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        isMouseDown = true;
+    });
+    
+    canvas.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        isMouseDown = false;
+    });
+    
+    canvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        const newMouseX = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
+        const newMouseY = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
+        
+        if (isMouseDown) {
+            targetRotationY += (newMouseX - mouseX) * 2;
+            targetRotationX += (newMouseY - mouseY) * 2;
+        }
+        
+        mouseX = newMouseX;
+        mouseY = newMouseY;
+    });
+    
+    // Set cursor style
+    canvas.style.cursor = 'grab';
+    
+    // Handle resize
+    function handleResize() {
+        if (!container) return;
+        
+        const newWidth = container.offsetWidth;
+        const newHeight = container.offsetHeight;
+        
+        camera.aspect = newWidth / newHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(newWidth, newHeight);
+    }
+    
+    window.addEventListener('resize', handleResize);
+}
+
+// ===== Smooth Scrolling =====
+function initSmoothScrolling() {
+    const links = document.querySelectorAll('a[href^="#"]');
+    
+    links.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            const targetId = link.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                const headerOffset = 80;
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+}
+
+// ===== Floating Pixel Animation =====
+function animateFloatingPixels() {
+    const pixels = document.querySelectorAll('.pixel-cube');
+    
+    pixels.forEach((pixel, index) => {
+        const baseDelay = index * 2;
+        const randomDelay = Math.random() * 4;
+        pixel.style.animationDelay = `${baseDelay + randomDelay}s`;
+        
+        // Add random drift
+        setInterval(() => {
+            const randomX = (Math.random() - 0.5) * 20;
+            const randomY = (Math.random() - 0.5) * 20;
+            pixel.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        }, 3000 + Math.random() * 2000);
+    });
+}
+
+// ===== Button Ripple Effect =====
+function addRippleEffect() {
+    const buttons = document.querySelectorAll('.cta-button, .nav-cta');
+    
+    buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple');
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+}
+
+// ===== Card Hover Effects =====
+function initCardEffects() {
+    const cards = document.querySelectorAll('.problem-card, .advantage-card, .showcase-card');
+    
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'translateY(-10px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+}
+
+// ===== Notification System =====
+function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notif => notif.remove());
+    
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-info-circle"></i>
+        <span>${message}</span>
+        <button class="notification-close" onclick="this.parentElement.remove()">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    
+    // Add notification styles if not already present
+    if (!document.querySelector('#notification-styles')) {
+        const style = document.createElement('style');
+        style.id = 'notification-styles';
+        style.textContent = `
+            .notification {
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: var(--light-bg);
+                color: var(--text-primary);
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                border-left: 4px solid var(--primary-color);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                z-index: 10001;
+                animation: slideInRight 0.3s ease;
+                max-width: 350px;
+            }
+            
+            .notification-close {
+                background: none;
+                border: none;
+                color: var(--text-secondary);
+                cursor: pointer;
+                padding: 0;
+                margin-left: auto;
+                opacity: 0.7;
+                transition: opacity 0.2s ease;
+            }
+            
+            .notification-close:hover {
+                opacity: 1;
+            }
+            
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(notification);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.remove();
+        }
+    }, 5000);
+}
+
+// Make showNotification globally available
+window.showNotification = showNotification;
+
+// ===== Scroll Animations =====
+function initScrollAnimations() {
+    const animatedElements = document.querySelectorAll('.problem-card, .advantage-card, .showcase-card, .tech-item');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+    
+    animatedElements.forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(50px)';
+        el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+        observer.observe(el);
+    });
+}
+
+// ===== Performance Optimization =====
+function optimizePerformance() {
+    // Reduce animations on slower devices
+    const isSlowDevice = navigator.hardwareConcurrency < 4 || navigator.deviceMemory < 4;
+    
+    if (isSlowDevice) {
+        document.documentElement.style.setProperty('--animation-duration', '0.1s');
+        
+        // Disable some animations
+        const heavyAnimations = document.querySelectorAll('.rotating-cube, .pixel-3d-model');
+        heavyAnimations.forEach(el => {
+            el.style.animation = 'none';
+        });
+    }
+}
+
+// ===== Initialize Everything =====
+function initializeApp() {
+    try {
+        initMobileMenu();
+        updateActiveNavLink();
+        init3DBrain();
+        initSmoothScrolling();
+        animateFloatingPixels();
+        addRippleEffect();
+        initCardEffects();
+        initScrollAnimations();
+        optimizePerformance();
+        
+        // Add CSS for ripple effect
+        const rippleStyle = document.createElement('style');
+        rippleStyle.textContent = `
+            .cta-button, .nav-cta {
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .ripple {
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.3);
+                transform: scale(0);
+                animation: ripple-animation 0.6s linear;
+                pointer-events: none;
+            }
+            
+            @keyframes ripple-animation {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(rippleStyle);
+        
+        console.log('PixelMind Explainer initialized successfully!');
+    } catch (error) {
+        console.error('Error initializing PixelMind Explainer:', error);
+    }
+}
+
+// ===== DOM Content Loaded =====
+document.addEventListener('DOMContentLoaded', initializeApp);
+
+// ===== Handle Page Visibility =====
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        // Pause heavy animations when tab is not visible
+        if (renderer) {
+            renderer.setAnimationLoop(null);
         }
     } else {
-        konamiIndex = 0;
+        // Resume animations when tab is visible
+        if (renderer && scene && camera) {
+            renderer.setAnimationLoop(() => {
+                renderer.render(scene, camera);
+            });
+        }
     }
 });
 
-function activateEasterEgg() {
-    document.body.style.animation = 'rainbow 2s linear infinite';
-    showNotification('🎮 Konami Code Activated! Welcome to the Pixel Dimension! 🎮', 'info');
-    
-    const easterStyle = document.createElement('style');
-    easterStyle.textContent = `
-        @keyframes rainbow {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
+// ===== Error Handling =====
+window.addEventListener('error', (e) => {
+    console.error('JavaScript Error:', e.error);
+});
+
+// ===== Keyboard Navigation =====
+document.addEventListener('keydown', (e) => {
+    // ESC key closes mobile menu
+    if (e.key === 'Escape') {
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+        if (hamburger && navMenu) {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
         }
-    `;
-    document.head.appendChild(easterStyle);
-    
-    setTimeout(() => {
-        document.body.style.animation = '';
-        easterStyle.remove();
-    }, 10000);
-} 
+    }
+});
+
+// ===== Analytics Ready =====
+window.pixelmindReady = true; 

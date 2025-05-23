@@ -3,58 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PixelMind Explainer - Illuminating Minds, Explaining Everything</title>
+    <title>PixelMind Explainer - AI-Powered 3D Learning</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Custom Styles -->
     <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Three.js for 3D graphics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-    <!-- Pixelated Loader -->
-    <div id="loader" class="loader-container">
+    <!-- Loading Screen -->
+    <div class="loader-container" id="loader">
         <div class="loader-content">
             <div class="pixel-loader">
-                <div class="pixel-block" style="--delay: 0s; --x: 0; --y: 0;"></div>
-                <div class="pixel-block" style="--delay: 0.1s; --x: 1; --y: 0;"></div>
-                <div class="pixel-block" style="--delay: 0.2s; --x: 2; --y: 0;"></div>
-                <div class="pixel-block" style="--delay: 0.3s; --x: 0; --y: 1;"></div>
-                <div class="pixel-block" style="--delay: 0.4s; --x: 1; --y: 1;"></div>
-                <div class="pixel-block" style="--delay: 0.5s; --x: 2; --y: 1;"></div>
-                <div class="pixel-block" style="--delay: 0.6s; --x: 0; --y: 2;"></div>
-                <div class="pixel-block" style="--delay: 0.7s; --x: 1; --y: 2;"></div>
-                <div class="pixel-block" style="--delay: 0.8s; --x: 2; --y: 2;"></div>
+                <div class="pixel-block" style="--x: 0; --y: 0; --delay: 0s;"></div>
+                <div class="pixel-block" style="--x: 1; --y: 0; --delay: 0.1s;"></div>
+                <div class="pixel-block" style="--x: 2; --y: 0; --delay: 0.2s;"></div>
+                <div class="pixel-block" style="--x: 0; --y: 1; --delay: 0.3s;"></div>
+                <div class="pixel-block" style="--x: 1; --y: 1; --delay: 0.4s;"></div>
+                <div class="pixel-block" style="--x: 2; --y: 1; --delay: 0.5s;"></div>
+                <div class="pixel-block" style="--x: 0; --y: 2; --delay: 0.6s;"></div>
+                <div class="pixel-block" style="--x: 1; --y: 2; --delay: 0.7s;"></div>
+                <div class="pixel-block" style="--x: 2; --y: 2; --delay: 0.8s;"></div>
             </div>
             <div class="loader-text">
-                <span class="loading-text">Loading PixelMind</span>
-                <span class="loading-dots">
-                    <span>.</span>
-                    <span>.</span>
-                    <span>.</span>
-                </span>
+                Loading<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
             </div>
         </div>
     </div>
 
-    <!-- Navigation Bar -->
+    <!-- Pixel Grid Background -->
+    <div class="pixel-grid-bg"></div>
+
+    <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <div class="logo">
+            <div class="logo" onclick="window.location.href='index.html'">
                 <div class="logo-icon">
                     <div class="pixel-brain"></div>
                 </div>
                 <span class="logo-text">PixelMind Explainer</span>
             </div>
-            <div class="nav-menu" id="nav-menu">
-                <a href="#home" class="nav-link active">Home</a>
-                <a href="#features" class="nav-link">Core Features</a>
-                <a href="#showcases" class="nav-link">Showcases</a>
-                <a href="#how-it-works" class="nav-link">How It Works</a>
-                <a href="#roadmap" class="nav-link">Roadmap</a>
-                <a href="#insights" class="nav-link">Insights</a>
-                <a href="#about" class="nav-link">About Us</a>
-                <button class="cta-button nav-cta">Try Explainer</button>
-            </div>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="features.html" class="nav-link">Core Features</a></li>
+                <li><a href="#showcases" class="nav-link">Showcases</a></li>
+                <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
+                <li><a href="#roadmap" class="nav-link">Roadmap</a></li>
+                <li><a href="#insights" class="nav-link">Insights</a></li>
+                <li><a href="#about" class="nav-link">About Us</a></li>
+                <li><a href="#" class="nav-link nav-cta">Try Explainer</a></li>
+            </ul>
+            
             <div class="hamburger" id="hamburger">
                 <span></span>
                 <span></span>
@@ -64,34 +71,37 @@
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="pixel-grid-bg"></div>
+    <section class="hero" id="home">
         <div class="container">
             <div class="hero-content">
                 <h1 class="hero-title">
-                    <span class="pixel-text">Complex Concepts?</span>
-                    <span class="gradient-text">AI Unravels Them in 3D.</span>
+                    <span class="gradient-text">Complex Concepts?</span><br>
+                    AI Unravels Them in <span class="pixel-text">3D</span>
                 </h1>
+                
                 <p class="hero-subtitle">
                     AI-powered interactive 3D explainer that transforms abstract knowledge into vivid, 
-                    intuitive, and explorable pixelated scenes.
+                    intuitive, and explorable pixelated scenes. Make learning tangible.
                 </p>
+                
                 <div class="hero-buttons">
-                    <button class="cta-button primary-cta">
-                        <i class="fas fa-play"></i> Try It Now
+                    <button class="cta-button primary-cta" onclick="showNotification('Demo coming soon!')">
+                        <i class="fas fa-play"></i> Watch Demo
                     </button>
-                    <button class="cta-button secondary-cta">
-                        <i class="fas fa-video"></i> Watch Demo
+                    <button class="cta-button secondary-cta" onclick="window.location.href='features.html'">
+                        <i class="fas fa-rocket"></i> Explore Features
                     </button>
                 </div>
             </div>
+            
             <div class="hero-visual">
                 <div class="floating-pixels">
-                    <div class="pixel-cube" data-speed="0.5"></div>
-                    <div class="pixel-cube" data-speed="0.3"></div>
-                    <div class="pixel-cube" data-speed="0.7"></div>
-                    <div class="pixel-cube" data-speed="0.4"></div>
+                    <div class="pixel-cube"></div>
+                    <div class="pixel-cube"></div>
+                    <div class="pixel-cube"></div>
+                    <div class="pixel-cube"></div>
                 </div>
+                
                 <div class="hero-3d-container">
                     <canvas id="hero-canvas"></canvas>
                 </div>
@@ -99,32 +109,29 @@
         </div>
     </section>
 
-    <!-- Problem Statement -->
+    <!-- Problem Section -->
     <section class="problem-section">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Still Wrestling with Abstract Information?</h2>
                 <p class="section-subtitle">Traditional text and 2D images fall short in explaining complex, dynamic concepts.</p>
             </div>
+            
             <div class="problem-grid">
                 <div class="problem-card">
-                    <div class="problem-icon">
-                        <i class="fas fa-book-open"></i>
-                    </div>
+                    <i class="fas fa-book problem-icon"></i>
                     <h3>Text Overload</h3>
                     <p>Dense documentation that takes hours to understand</p>
                 </div>
+                
                 <div class="problem-card">
-                    <div class="problem-icon">
-                        <i class="fas fa-image"></i>
-                    </div>
+                    <i class="fas fa-image problem-icon"></i>
                     <h3>Static Visuals</h3>
                     <p>2D images can't capture dynamic processes</p>
                 </div>
+                
                 <div class="problem-card">
-                    <div class="problem-icon">
-                        <i class="fas fa-question-circle"></i>
-                    </div>
+                    <i class="fas fa-question-circle problem-icon"></i>
                     <h3>Lost in Complexity</h3>
                     <p>Abstract concepts remain abstract</p>
                 </div>
@@ -139,50 +146,58 @@
                 <h2 class="section-title gradient-text">PixelMind Explainer: AI-Driven, 3D Insight</h2>
                 <p class="section-subtitle">We use AI to understand your needs and generate interactive 3D scenes instantly.</p>
             </div>
-            <div class="solution-visual">
-                <div class="transformation-demo">
-                    <div class="before">
-                        <div class="concept-text">DNA Replication Process</div>
-                    </div>
-                    <div class="arrow-transform">
-                        <div class="pixel-arrow"></div>
-                    </div>
-                    <div class="after">
-                        <div class="pixel-3d-model"></div>
-                    </div>
+            
+            <div class="transformation-demo">
+                <div class="before">
+                    <div class="concept-text">Abstract Concept</div>
+                </div>
+                
+                <div class="arrow-transform">
+                    <div class="pixel-arrow"></div>
+                </div>
+                
+                <div class="after">
+                    <div class="pixel-3d-model"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Key Advantages -->
+    <!-- Advantages Section -->
     <section class="advantages-section">
         <div class="container">
-            <h2 class="section-title">Why Choose PixelMind?</h2>
+            <div class="section-header">
+                <h2 class="section-title">Why Choose PixelMind?</h2>
+                <p class="section-subtitle">Key advantages that make learning effortless</p>
+            </div>
+            
             <div class="advantages-grid">
                 <div class="advantage-card">
-                    <div class="advantage-icon pixel-icon">
+                    <div class="pixel-icon">
                         <div class="pixel-brain-icon"></div>
                     </div>
                     <h3>AI-Powered Parsing</h3>
                     <p>Intelligent understanding, precise presentation</p>
                 </div>
+                
                 <div class="advantage-card">
-                    <div class="advantage-icon pixel-icon">
+                    <div class="pixel-icon">
                         <div class="pixel-3d-icon"></div>
                     </div>
                     <h3>Immersive 3D Exploration</h3>
                     <p>Dynamic interaction, deeper retention</p>
                 </div>
+                
                 <div class="advantage-card">
-                    <div class="advantage-icon pixel-icon">
+                    <div class="pixel-icon">
                         <div class="pixel-construction-icon"></div>
                     </div>
                     <h3>Instant Visualization</h3>
                     <p>Rapid generation, no waiting</p>
                 </div>
+                
                 <div class="advantage-card">
-                    <div class="advantage-icon pixel-icon">
+                    <div class="pixel-icon">
                         <div class="pixel-lightbulb-icon"></div>
                     </div>
                     <h3>Simplifying Complexity</h3>
@@ -192,71 +207,89 @@
         </div>
     </section>
 
-    <!-- Featured Showcases Preview -->
-    <section class="showcases-preview">
+    <!-- Showcases Preview Section -->
+    <section class="showcases-preview" id="showcases">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Featured Showcases</h2>
-                <p class="section-subtitle">Explore how PixelMind transforms knowledge across domains</p>
+                <p class="section-subtitle">Experience the magic of PixelMind Explainer across domains</p>
             </div>
+            
             <div class="showcase-cards">
-                <div class="showcase-card" data-category="life-science">
+                <div class="showcase-card">
                     <div class="showcase-visual">
                         <div class="pixel-dna"></div>
                     </div>
                     <h3>Life Science Unveiled</h3>
-                    <p>Explore cellular processes and biological mechanisms in stunning 3D detail</p>
-                    <a href="#showcases" class="learn-more">Explore <i class="fas fa-arrow-right"></i></a>
+                    <p>Explore DNA replication, cell mitosis, and protein structures in interactive 3D</p>
+                    <a href="#" class="learn-more">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
-                <div class="showcase-card" data-category="technology">
+                
+                <div class="showcase-card">
                     <div class="showcase-visual">
                         <div class="pixel-circuit"></div>
                     </div>
                     <h3>Tech Principles Deconstructed</h3>
-                    <p>Understand algorithms and systems through interactive visualizations</p>
-                    <a href="#showcases" class="learn-more">Explore <i class="fas fa-arrow-right"></i></a>
+                    <p>Understand algorithms, data structures, and system architectures visually</p>
+                    <a href="#" class="learn-more">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
-                <div class="showcase-card" data-category="education">
+                
+                <div class="showcase-card">
                     <div class="showcase-visual">
                         <div class="pixel-atom"></div>
                     </div>
                     <h3>Knowledge Playground</h3>
-                    <p>Make learning engaging with gamified educational experiences</p>
-                    <a href="#showcases" class="learn-more">Explore <i class="fas fa-arrow-right"></i></a>
+                    <p>Interactive physics simulations and mathematical concept explorations</p>
+                    <a href="#" class="learn-more">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
             </div>
+            
             <div class="section-cta">
-                <button class="cta-button secondary-cta">See All Showcases</button>
+                <button class="cta-button primary-cta">
+                    See All Showcases <i class="fas fa-external-link-alt"></i>
+                </button>
             </div>
         </div>
     </section>
 
-    <!-- Technology Highlight -->
-    <section class="tech-highlight">
+    <!-- Technology Highlight Section -->
+    <section class="tech-highlight" id="how-it-works">
         <div class="container">
             <div class="tech-content">
-                <div class="tech-text">
-                    <h2 class="section-title">Powered by Cutting-Edge Technology</h2>
+                <div class="tech-info">
+                    <h2 class="section-title">Technology Empowerment</h2>
+                    <p class="section-subtitle">Powered by cutting-edge AI and modern web technologies</p>
+                    
                     <div class="tech-features">
                         <div class="tech-item">
                             <i class="fas fa-brain"></i>
-                            <span>Advanced AI Engine</span>
+                            <span>AI Engine</span>
                         </div>
                         <div class="tech-item">
                             <i class="fas fa-cube"></i>
-                            <span>Real-time 3D Rendering</span>
+                            <span>Real-time 3D</span>
                         </div>
                         <div class="tech-item">
                             <i class="fas fa-th"></i>
-                            <span>Pixelated Aesthetics</span>
+                            <span>Pixel Aesthetics</span>
                         </div>
                         <div class="tech-item">
-                            <i class="fas fa-bolt"></i>
-                            <span>Lightning Fast</span>
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>Cross-Platform</span>
                         </div>
                     </div>
-                    <button class="cta-button">Dive Deeper into Technology</button>
+                    
+                    <button class="cta-button secondary-cta">
+                        <i class="fas fa-cogs"></i> Dive Deeper into Technology
+                    </button>
                 </div>
+                
                 <div class="tech-visual">
                     <div class="tech-animation">
                         <div class="rotating-cube"></div>
@@ -275,38 +308,46 @@
                         <div class="pixel-brain"></div>
                         <span>PixelMind Explainer</span>
                     </div>
-                    <p>Illuminating Minds, Explaining Everything</p>
+                    <p>Illuminating minds, explaining everything - pixel by pixel, mind by mind.</p>
                 </div>
+                
                 <div class="footer-links">
                     <div class="footer-column">
                         <h4>Product</h4>
-                        <a href="#features">Features</a>
+                        <a href="features.html">Features</a>
                         <a href="#showcases">Showcases</a>
-                        <a href="#how-it-works">Technology</a>
+                        <a href="#how-it-works">How It Works</a>
+                        <a href="#roadmap">Roadmap</a>
                     </div>
+                    
+                    <div class="footer-column">
+                        <h4>Resources</h4>
+                        <a href="#insights">Insights</a>
+                        <a href="#docs">Documentation</a>
+                        <a href="#api">API</a>
+                        <a href="#support">Support</a>
+                    </div>
+                    
                     <div class="footer-column">
                         <h4>Company</h4>
                         <a href="#about">About Us</a>
-                        <a href="#roadmap">Roadmap</a>
-                        <a href="#insights">Insights</a>
-                    </div>
-                    <div class="footer-column">
-                        <h4>Legal</h4>
-                        <a href="#">Privacy Policy</a>
-                        <a href="#">Terms of Use</a>
-                        <a href="#">Contact</a>
+                        <a href="#careers">Careers</a>
+                        <a href="#contact">Contact</a>
+                        <a href="#privacy">Privacy</a>
                     </div>
                 </div>
+                
                 <div class="footer-social">
                     <h4>Connect</h4>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-github"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-discord"></i></a>
+                        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" aria-label="Discord"><i class="fab fa-discord"></i></a>
                     </div>
                 </div>
             </div>
+            
             <div class="footer-bottom">
                 <p>&copy; 2025 PixelMind Explainer. All Rights Reserved.</p>
                 <div class="pixel-pattern"></div>
@@ -314,7 +355,7 @@
         </div>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- JavaScript -->
     <script src="script.js"></script>
 </body>
 </html> 
