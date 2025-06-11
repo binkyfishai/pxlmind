@@ -15,6 +15,7 @@ import Footer from './components/Footer';
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -25,6 +26,23 @@ function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [mobileMenuOpen]);
 
   // Exact navigation items from design spec
   const navItems = [
@@ -44,35 +62,68 @@ function Navbar() {
     '#36D399', '#FF6B9B', '#FFD700'   // Pattern completion
   ];
 
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
   return (
-    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-      <div className="nav-content">
-        <Link to="/" className="logo">
-          <div className="pixel-logo">
-            {pixelColors.map((color, index) => (
-              <div
-                key={index}
-                className="pixel"
-                style={{backgroundColor: color}}
-              ></div>
+    <>
+      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+        <div className="nav-content">
+          <Link to="/" className="logo">
+            <div className="pixel-logo">
+              {pixelColors.map((color, index) => (
+                <div
+                  key={index}
+                  className="pixel"
+                  style={{backgroundColor: color}}
+                ></div>
+              ))}
+            </div>
+            <span>PixelMind Explainer</span>
+          </Link>
+          
+          {/* Desktop Navigation */}
+          <div className="nav-links">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={location.pathname === item.path ? 'active' : ''}
+              >
+                {item.label}
+              </Link>
             ))}
+            <button className="cta-button">Try the Explainer</button>
           </div>
-          <span>PixelMind Explainer</span>
-        </Link>
-        <div className="nav-links">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={location.pathname === item.path ? 'active' : ''}
-            >
-              {item.label}
-            </Link>
-          ))}
-          <button className="cta-button">Try the Explainer</button>
+
+          {/* Mobile Menu Toggle */}
+          <button 
+            className={`mobile-menu-toggle ${mobileMenuOpen ? 'active' : ''}`}
+            onClick={toggleMobileMenu}
+            aria-label="Toggle mobile menu"
+          >
+            <div className="hamburger-line"></div>
+            <div className="hamburger-line"></div>
+            <div className="hamburger-line"></div>
+          </button>
         </div>
+      </nav>
+
+      {/* Mobile Navigation Overlay */}
+      <div className={`mobile-nav-overlay ${mobileMenuOpen ? 'active' : ''}`}>
+        {navItems.map((item) => (
+          <Link
+            key={item.path}
+            to={item.path}
+            className={location.pathname === item.path ? 'active' : ''}
+          >
+            {item.label}
+          </Link>
+        ))}
+        <button className="cta-button">Try the Explainer</button>
       </div>
-    </nav>
+    </>
   );
 }
 

@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import HotAirBalloonDemo from '../components/HotAirBalloonDemo';
+import RocketDemo from '../components/RocketDemo';
+import LeaningTowerDemo from '../components/LeaningTowerDemo';
+import SolarSystemDemo from '../components/SolarSystemDemo';
 
 interface Showcase {
   id: string;
@@ -8,6 +12,7 @@ interface Showcase {
   userInput: string;
   interactions: string[];
   learningValue: string;
+  demoComponent: React.ComponentType<any>;
 }
 
 interface Category {
@@ -19,69 +24,91 @@ interface Category {
 const ShowcasesPage: React.FC = () => {
   const categories: Category[] = [
     {
-      id: 'science',
-      name: 'Science',
-      description: 'Complex scientific concepts visualized in 3D'
+      id: 'physics',
+      name: 'Physics',
+      description: 'Fundamental physics concepts visualized in 3D'
     },
     {
-      id: 'math',
-      name: 'Mathematics',
-      description: 'Mathematical principles brought to life'
+      id: 'astronomy',
+      name: 'Astronomy',
+      description: 'Space and celestial mechanics brought to life'
     },
     {
       id: 'engineering',
       name: 'Engineering',
-      description: 'Engineering concepts and mechanisms explained'
+      description: 'Engineering concepts and flight mechanics'
     }
   ];
 
   const showcases: Showcase[] = [
     {
-      id: 'dna-structure',
-      title: 'DNA Double Helix Structure',
-      description: 'Interactive 3D model of DNA structure with detailed base pair interactions',
-      category: 'science',
-      userInput: 'Explain DNA structure',
+      id: 'gravity-experiment',
+      title: 'Gravity Experiment - Leaning Tower of Pisa',
+      description: 'Interactive demonstration of Galileo\'s famous gravity experiment showing that objects of different masses fall at the same rate',
+      category: 'physics',
+      userInput: 'Show how gravity affects falling objects',
       interactions: [
-        'Rotate and zoom the DNA model',
-        'Click on base pairs to see chemical bonds',
-        'Unwrap the double helix animation'
+        'Click "Reset & Drop Balls" to start the experiment',
+        'Observe how both balls fall at the same rate',
+        'Rotate the view to see the experiment from different angles'
       ],
-      learningValue: 'Understanding molecular biology fundamentals'
+      learningValue: 'Understanding that gravitational acceleration is independent of mass',
+      demoComponent: LeaningTowerDemo
     },
     {
-      id: 'quantum-states',
-      title: 'Quantum State Visualization',
-      description: 'Visual representation of quantum mechanical states and transitions',
-      category: 'science',
-      userInput: 'Show quantum electron states',
+      id: 'solar-system',
+      title: 'Nine Planets Solar System',
+      description: 'Complete solar system model with all planets including Pluto, showing orbital mechanics and relative sizes',
+      category: 'astronomy',
+      userInput: 'Explain our solar system and planetary motion',
       interactions: [
-        'Toggle between different quantum states',
-        'Observe electron probability clouds',
-        'Interact with energy level transitions'
+        'Zoom and pan around the solar system',
+        'Observe planetary orbital speeds and rotations',
+        'See Saturn\'s rings and Earth\'s moon in detail'
       ],
-      learningValue: 'Grasping quantum mechanics concepts'
+      learningValue: 'Understanding planetary orbits, relative sizes, and celestial mechanics',
+      demoComponent: SolarSystemDemo
     },
     {
-      id: 'calculus-3d',
-      title: '3D Calculus Concepts',
-      description: 'Interactive visualization of multivariable calculus concepts',
-      category: 'math',
-      userInput: 'Visualize partial derivatives',
+      id: 'rocket-launch',
+      title: 'SpaceX Rocket Launch Simulation',
+      description: 'Realistic rocket launch simulation showing physics of propulsion, atmospheric transition, and space travel',
+      category: 'engineering',
+      userInput: 'How does a rocket launch work?',
       interactions: [
-        'Manipulate 3D surfaces',
-        'Observe tangent planes',
-        'Track gradient vectors'
+        'Watch the automated launch sequence',
+        'Observe the transition from atmosphere to space',
+        'Follow the rocket\'s trajectory and exhaust dynamics'
       ],
-      learningValue: 'Understanding multivariable calculus'
+      learningValue: 'Understanding rocket propulsion, atmospheric effects, and space travel physics',
+      demoComponent: RocketDemo
+    },
+    {
+      id: 'hot-air-balloon',
+      title: 'Flying Hot Air Balloon',
+      description: 'Peaceful hot air balloon flight simulation with realistic wind patterns and cloud formations',
+      category: 'physics',
+      userInput: 'How do hot air balloons fly and navigate?',
+      interactions: [
+        'Watch the balloon drift with wind patterns',
+        'Observe realistic cloud formations moving',
+        'Control the viewing angle to explore the scene'
+      ],
+      learningValue: 'Understanding buoyancy, air currents, and atmospheric physics',
+      demoComponent: HotAirBalloonDemo
     }
   ];
 
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [expandedDemo, setExpandedDemo] = useState<string | null>(null);
 
   const filteredShowcases = selectedCategory === 'all'
     ? showcases
     : showcases.filter(showcase => showcase.category === selectedCategory);
+
+  const toggleDemo = (demoId: string) => {
+    setExpandedDemo(expandedDemo === demoId ? null : demoId);
+  };
 
   return (
     <div className="showcases-page">
@@ -135,43 +162,56 @@ const ShowcasesPage: React.FC = () => {
       <section className="content-section">
         <div className="container">
           <div className="showcases-grid">
-            {filteredShowcases.map(showcase => (
-              <div key={showcase.id} className="showcase-card">
-                <div className="showcase-visual">
-                  {/* 3D visualization component will be added here */}
-                </div>
-                <div className="text-content">
-                  <h3>{showcase.title}</h3>
-                  <p className="showcase-description">{showcase.description}</p>
-                  
-                  <div className="showcase-details">
-                    <div className="detail-section">
-                      <h4>User Query</h4>
-                      <p className="user-input">{showcase.userInput}</p>
-                    </div>
-                    
-                    <div className="detail-section">
-                      <h4>Interactive Features</h4>
-                      <ul className="interactions-list">
-                        {showcase.interactions.map((interaction, index) => (
-                          <li key={index}>{interaction}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    
-                    <div className="detail-section">
-                      <h4>Learning Outcome</h4>
-                      <p className="learning-value">{showcase.learningValue}</p>
-                    </div>
+            {filteredShowcases.map(showcase => {
+              const DemoComponent = showcase.demoComponent;
+              const isExpanded = expandedDemo === showcase.id;
+              
+              return (
+                <div key={showcase.id} className={`showcase-card ${isExpanded ? 'expanded' : ''}`}>
+                  <div className="showcase-visual">
+                    <DemoComponent 
+                      height={isExpanded ? "500px" : "300px"}
+                      className="showcase-demo"
+                    />
                   </div>
+                  <div className="text-content">
+                    <h3>{showcase.title}</h3>
+                    <p className="showcase-description">{showcase.description}</p>
+                    
+                    <div className="showcase-details">
+                      <div className="detail-section">
+                        <h4>User Query</h4>
+                        <p className="user-input">{showcase.userInput}</p>
+                      </div>
+                      
+                      <div className="detail-section">
+                        <h4>Interactive Features</h4>
+                        <ul className="interactions-list">
+                          {showcase.interactions.map((interaction, index) => (
+                            <li key={index}>{interaction}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      
+                      <div className="detail-section">
+                        <h4>Learning Outcome</h4>
+                        <p className="learning-value">{showcase.learningValue}</p>
+                      </div>
+                    </div>
 
-                  <div className="showcase-actions">
-                    <button className="try-button">Try It Now</button>
-                    <button className="learn-more-button">Learn More</button>
+                    <div className="showcase-actions">
+                      <button 
+                        className="expand-button"
+                        onClick={() => toggleDemo(showcase.id)}
+                      >
+                        {isExpanded ? 'Collapse Demo' : 'Expand Demo'}
+                      </button>
+                      <button className="learn-more-button">Learn More</button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -189,6 +229,10 @@ const ShowcasesPage: React.FC = () => {
               <p>
                 "The possibilities are endless. What will you explain with PixelMind?"
               </p>
+            </div>
+            <div className="cta-section">
+              <button className="primary-button">Try PixelMind Now</button>
+              <button className="secondary-button">View Documentation</button>
             </div>
           </div>
         </div>
