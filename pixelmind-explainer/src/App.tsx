@@ -11,6 +11,7 @@ import TechnologyPage from './pages/TechnologyPage';
 import RoadmapPage from './pages/RoadmapPage';
 import InsightsPage from './pages/InsightsPage';
 import AboutPage from './pages/AboutPage';
+import DocumentationPage from './pages/DocumentationPage';
 import Footer from './components/Footer';
 
 function Navbar() {
@@ -50,6 +51,7 @@ function Navbar() {
     { path: '/features', label: 'Core Features' },
     { path: '/showcases', label: 'Showcases / Demos' },
     { path: '/technology', label: 'Technology Insight' },
+    { path: '/documentation', label: 'Documentation' },
     { path: '/roadmap', label: 'Roadmap' },
     { path: '/insights', label: 'Insights' },
     { path: '/about', label: 'About Us' }
@@ -164,6 +166,7 @@ function App() {
           <Route path="/features" element={<FeaturesPage />} />
           <Route path="/showcases" element={<ShowcasesPage />} />
           <Route path="/technology" element={<TechnologyPage />} />
+          <Route path="/documentation" element={<DocumentationPage />} />
           <Route path="/roadmap" element={<RoadmapPage />} />
           <Route path="/insights" element={<InsightsPage />} />
           <Route path="/about" element={<AboutPage />} />
