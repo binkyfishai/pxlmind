@@ -1,10 +1,6 @@
 import React from 'react';
 
-interface HomePageProps {
-  pixelMode: boolean;
-}
-
-const HomePage: React.FC<HomePageProps> = ({ pixelMode }) => {
+const HomePage: React.FC = () => {
   // Exact color palette from design specification
   const pixelColors = ['#165DFF', '#36D399', '#FF6B9B', '#FFD700', '#FF4500'];
   
@@ -26,10 +22,7 @@ const HomePage: React.FC<HomePageProps> = ({ pixelMode }) => {
           </div>
           <div className="hero-visual">
             <div className="brain-container">
-              <div className="pixel-brain" style={{
-                animationDuration: pixelMode ? '20s' : '10s',
-                filter: pixelMode ? 'none' : 'blur(1px) brightness(1.2)'
-              }}>
+              <div className="pixel-brain">
                 {Array.from({length: 50}, (_, i) => (
                   <div 
                     key={i} 
@@ -37,8 +30,7 @@ const HomePage: React.FC<HomePageProps> = ({ pixelMode }) => {
                     style={{
                       backgroundColor: pixelColors[i % 5],
                       animationDelay: `${i * 0.1}s`,
-                      borderRadius: pixelMode ? '3px' : '50%',
-                      transform: pixelMode ? 'none' : 'scale(1.5)'
+                      borderRadius: '3px'
                     }}
                   ></div>
                 ))}
@@ -198,17 +190,17 @@ const HomePage: React.FC<HomePageProps> = ({ pixelMode }) => {
             <div className="tech-item">
               <span className="tech-icon">🎮</span>
               <h3>Real-time 3D Rendering</h3>
-              <p>Powered by Three.js for smooth, interactive experiences</p>
+              <p>WebGL-powered visualization with Three.js</p>
             </div>
             <div className="tech-item">
-              <span className="tech-icon">🎨</span>
-              <h3>Pixelated Aesthetics</h3>
-              <p>Unique visual style that balances performance and beauty</p>
+              <span className="tech-icon">🔄</span>
+              <h3>Interactive Systems</h3>
+              <p>Dynamic user engagement and real-time feedback</p>
             </div>
           </div>
           <div className="tech-cta">
-            <button className="secondary-button">View All Showcases</button>
-            <button className="secondary-button">Dive into Technical Details</button>
+            <button className="primary-button">Explore Technology</button>
+            <button className="secondary-button">View Architecture</button>
           </div>
         </div>
       </section>

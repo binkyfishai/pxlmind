@@ -150,19 +150,14 @@ function LoadingProgress() {
 }
 
 function App() {
-  const [pixelMode, setPixelMode] = useState(true);
-
   return (
     <Router>
       <div className="App">
         <LoadingProgress />
         <Navbar />
-        <div className="mode-toggle" onClick={() => setPixelMode(!pixelMode)}>
-          {pixelMode ? 'Simplified 3D Mode' : 'Pixel Mode'}
-        </div>
         
         <Routes>
-          <Route path="/" element={<HomePage pixelMode={pixelMode} />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/features" element={<FeaturesPage />} />
           <Route path="/showcases" element={<ShowcasesPage />} />
           <Route path="/technology" element={<TechnologyPage />} />
