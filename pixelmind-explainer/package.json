@@ -2,6 +2,7 @@
   "name": "pixelmind-explainer",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/",
   "dependencies": {
     "@react-three/drei": "^10.0.8",
     "@react-three/fiber": "^9.1.2",
