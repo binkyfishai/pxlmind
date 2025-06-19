@@ -1,0 +1,238 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js 电风扇</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #f0f0f0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.132.2/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.132.2/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        let scene, camera, renderer, controls;
+        let fanGroup, bladesAssembly;
+
+        const FAN_MODEL_NAME = "电风扇";
+
+        function init() {
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf0f0f0);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(4, 3, 7); // Adjusted for fan size
+            camera.lookAt(0, 1.5, 0); // Look at the approximate center of the fan
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true; // Enable shadows
+            document.body.appendChild(renderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+            directionalLight.position.set(8, 15, 10);
+            directionalLight.castShadow = true;
+            // Configure shadow properties for directional light
+            directionalLight.shadow.mapSize.width = 1024;
+            directionalLight.shadow.mapSize.height = 1024;
+            directionalLight.shadow.camera.near = 0.5;
+            directionalLight.shadow.camera.far = 50;
+            directionalLight.shadow.camera.left = -10;
+            directionalLight.shadow.camera.right = 10;
+            directionalLight.shadow.camera.top = 10;
+            directionalLight.shadow.camera.bottom = -10;
+            scene.add(directionalLight);
+            // const helper = new THREE.CameraHelper( directionalLight.shadow.camera );
+            // scene.add( helper );
+
+
+            // Grid Helper
+            const gridHelper = new THREE.GridHelper(50, 50, 0xcccccc, 0xdddddd);
+            scene.add(gridHelper);
+            // gridHelper.receiveShadow = true; // GridHelper itself doesn't easily receive shadows without a custom material or a plane underneath.
+
+            // Controls
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.target.set(0, 1.5, 0); // Match camera's lookAt target
+            controls.update();
+
+            // Create Model
+            createFanModel();
+
+            // Event Listeners
+            window.addEventListener('resize', onWindowResize);
+
+            // Start animation loop
+            animate();
+        }
+
+        function createFanModel() {
+            fanGroup = new THREE.Group();
+            scene.add(fanGroup);
+
+            const baseMat = new THREE.MeshStandardMaterial({ color: 0x666666, metalness: 0.4, roughness: 0.6 });
+            const standMat = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.5, roughness: 0.5 });
+            const motorMat = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, metalness: 0.6, roughness: 0.4 });
+            const bladeMat = new THREE.MeshStandardMaterial({ color: 0xaaddff, metalness: 0.3, roughness: 0.7, side: THREE.DoubleSide });
+            const spinnerMat = new THREE.MeshStandardMaterial({ color: 0x4682B4, metalness: 0.5, roughness: 0.3 });
+            const guardMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 0.7, roughness: 0.3 });
+
+            // 1. Base
+            const baseGeo = new THREE.CylinderGeometry(0.8, 1, 0.3, 32);
+            const base = new THREE.Mesh(baseGeo, baseMat);
+            base.position.y = 0.15; // Half height
+            base.castShadow = true;
+            base.receiveShadow = true;
+            fanGroup.add(base);
+
+            // 2. Stand
+            const standHeight = 2;
+            const standGeo = new THREE.CylinderGeometry(0.1, 0.1, standHeight, 16);
+            const stand = new THREE.Mesh(standGeo, standMat);
+            stand.position.y = 0.3 + standHeight / 2; // Base top + half stand height
+            stand.castShadow = true;
+            stand.receiveShadow = true;
+            fanGroup.add(stand);
+
+            // 3. Motor Housing
+            const motorLength = 0.8;
+            const motorRadius = 0.4;
+            const motorGeo = new THREE.CylinderGeometry(motorRadius, motorRadius * 0.9, motorLength, 32);
+            const motorHousing = new THREE.Mesh(motorGeo, motorMat);
+            motorHousing.rotation.x = Math.PI / 2; // Orient horizontally along Z-axis
+            motorHousing.position.y = 0.3 + standHeight; // Top of the stand
+            motorHousing.position.z = 0; // Centered on the stand
+            motorHousing.castShadow = true;
+            motorHousing.receiveShadow = true;
+            fanGroup.add(motorHousing);
+
+            const motorFrontZ = motorLength / 2;
+
+            // 4. Blades Assembly
+            bladesAssembly = new THREE.Group();
+            bladesAssembly.position.y = motorHousing.position.y;
+            bladesAssembly.position.z = motorFrontZ + 0.05; // Slightly in front of motor
+            fanGroup.add(bladesAssembly);
+
+            // Spinner (center of blades)
+            const spinnerGeo = new THREE.SphereGeometry(0.15, 16, 16);
+            const spinner = new THREE.Mesh(spinnerGeo, spinnerMat);
+            spinner.castShadow = true;
+            bladesAssembly.add(spinner);
+
+            // Blades
+            const numBlades = 3;
+            const bladeLength = 0.75; // Length from center to tip
+            const bladeWidth = 0.25;
+            const bladeThickness = 0.02;
+            // Create blade shape (flat box for simplicity)
+            // Geometry is created with its length along Y axis, then positioned and rotated.
+            const bladeGeo = new THREE.BoxGeometry(bladeWidth, bladeLength, bladeThickness); 
+
+            for (let i = 0; i < numBlades; i++) {
+                const blade = new THREE.Mesh(bladeGeo, bladeMat);
+                blade.castShadow = true;
+                blade.receiveShadow = true;
+
+                // Position the blade so one end (its base) is at the pivot's origin
+                blade.position.y = bladeLength / 2;
+
+                // Add pitch (tilt) to the blade to make it look like it can push air
+                blade.rotation.x = -Math.PI / 10; // Tilt angle
+
+                // Create a pivot group for each blade to handle its radial rotation
+                const bladePivot = new THREE.Group();
+                bladePivot.add(blade);
+
+                // Rotate the pivot to arrange blades radially
+                bladePivot.rotation.z = (Math.PI * 2 / numBlades) * i;
+                
+                bladesAssembly.add(bladePivot);
+            }
+            
+            // 5. Fan Guard
+            const guardGroup = new THREE.Group();
+            guardGroup.position.y = motorHousing.position.y;
+            guardGroup.position.z = motorFrontZ + 0.15; // In front of blades
+            fanGroup.add(guardGroup);
+
+            const guardOuterRadius = bladeLength + 0.15; // Slightly larger than blade radius
+            const guardWireThickness = 0.03;
+
+            // Outer Ring
+            const outerRingGeo = new THREE.TorusGeometry(guardOuterRadius, guardWireThickness, 16, 100);
+            const outerRing = new THREE.Mesh(outerRingGeo, guardMat);
+            outerRing.castShadow = true;
+            guardGroup.add(outerRing);
+
+            // Inner Ring
+            const innerRingRadius = guardOuterRadius * 0.3;
+            const innerRingGeo = new THREE.TorusGeometry(innerRingRadius, guardWireThickness * 0.8, 16, 64);
+            const innerRing = new THREE.Mesh(innerRingGeo, guardMat);
+            innerRing.castShadow = true;
+            guardGroup.add(innerRing);
+
+            // Spokes for the guard (simplified radial spokes)
+            const numSpokes = 8;
+            const spokeGeo = new THREE.CylinderGeometry(guardWireThickness / 2, guardWireThickness / 2, guardOuterRadius * 2, 8);
+            for (let i = 0; i < numSpokes; i++) {
+                const spoke = new THREE.Mesh(spokeGeo, guardMat);
+                spoke.rotation.z = (Math.PI / numSpokes) * i; // Rotate cylinders to form radial pattern
+                spoke.castShadow = true;
+                guardGroup.add(spoke);
+            }
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Default Y-axis rotation for the whole fan
+            if (fanGroup) {
+                fanGroup.rotation.y += 0.005;
+            }
+
+            // Fan blade rotation
+            if (bladesAssembly) {
+                bladesAssembly.rotation.z -= 0.15; // Negative for clockwise when looking from front (positive Z)
+                                                  // or positive for counter-clockwise
+            }
+
+            if (controls.enableDamping) {
+                controls.update();
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        init();
+    </script>
+</body>
+</html>
+```

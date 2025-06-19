@@ -1,12 +1,54 @@
 import React from 'react';
+import FanDemo from '../components/demos/FanDemo';
+import DNADemo from '../components/demos/DNADemo';
+import ParticleDemo from '../components/demos/ParticleDemo';
+import WaveDemo from '../components/demos/WaveDemo';
+
+interface ShowcaseInfo {
+  id: string;
+  title: string;
+  description: string;
+  component: React.ReactNode;
+  hint: string;
+}
 
 const HomePage: React.FC = () => {
-  // Exact color palette from design specification
   const pixelColors = ['#165DFF', '#36D399', '#FF6B9B', '#FFD700', '#FF4500'];
-  
+
+  const showcases: ShowcaseInfo[] = [
+    {
+      id: 'engineering',
+      title: 'Engineering Visualization',
+      description: 'Interactive 3D fan mechanism',
+      component: <FanDemo />,
+      hint: '🖱️ Drag to rotate | 🔍 Scroll to zoom'
+    },
+    {
+      id: 'particle-physics',
+      title: 'Particle Physics',
+      description: 'Dynamic particle system simulation',
+      component: <ParticleDemo />,
+      hint: '🎮 Interactive particle flow | 🔄 Auto-rotating'
+    },
+    {
+      id: 'wave-mechanics',
+      title: 'Wave Mechanics',
+      description: 'Interactive wave propagation',
+      component: <WaveDemo />,
+      hint: '👆 Click to create waves | 🌊 Watch propagation'
+    },
+    {
+      id: 'molecular-biology',
+      title: 'Molecular Biology',
+      description: 'DNA structure exploration',
+      component: <DNADemo containerId="dna-demo-showcase" />,
+      hint: '🧬 Explore DNA structure | 🔄 Rotate to inspect'
+    }
+  ];
+
   return (
     <>
-      {/* Hero Section - Exact text from design spec */}
+      {/* Hero Section */}
       <main className="hero">
         <div className="hero-content">
           <div className="hero-text">
@@ -40,7 +82,7 @@ const HomePage: React.FC = () => {
         </div>
       </main>
 
-      {/* The Barrier to Understanding - Exact title from design spec */}
+      {/* Problem Statement */}
       <section className="problem-statement">
         <div className="container">
           <h2>Still Struggling with Abstract Information?</h2>
@@ -62,7 +104,7 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* PixelMind's Solution - Exact title from design spec */}
+      {/* Solution Section */}
       <section className="solution">
         <div className="container">
           <h2>PixelMind Explainer: AI-Driven, 3D Insight</h2>
@@ -84,24 +126,14 @@ const HomePage: React.FC = () => {
             <div className="demo-card">
               <h3>After: PixelMind 3D</h3>
               <div className="demo-visual pixelmind">
-                <div className="interactive-3d">
-                  <div className="dna-helix">
-                    {Array.from({length: 20}, (_, i) => (
-                      <div key={i} className="nucleotide" style={{
-                        backgroundColor: pixelColors[i % 4],
-                        animationDelay: `${i * 0.1}s`
-                      }}></div>
-                    ))}
-                  </div>
-                  <div className="interaction-hint">👆 Interactive 3D Model</div>
-                </div>
+                <DNADemo containerId="dna-demo-solution" />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Why Choose PixelMind? - Exact advantages from design spec */}
+      {/* Features Section */}
       <section className="features">
         <div className="container">
           <h2>Why Choose PixelMind?</h2>
@@ -130,54 +162,26 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Featured Showcases Preview - Design spec examples */}
+      {/* Featured Showcases */}
       <section className="featured-showcases">
         <div className="container">
           <h2>Featured Showcases Preview</h2>
           <div className="showcases-grid">
-            <div className="showcase-card">
-              <div className="showcase-visual">
-                <div className="cell-division">
-                  {Array.from({length: 8}, (_, i) => (
-                    <div key={i} className="cell" style={{
-                      backgroundColor: '#165DFF',
-                      animationDelay: `${i * 0.2}s`
-                    }}></div>
-                  ))}
+            {showcases.map((showcase) => (
+              <div key={showcase.id} className="showcase-card">
+                <div className="showcase-visual">
+                  {showcase.component}
+                  <div className="interaction-hint">{showcase.hint}</div>
                 </div>
+                <h3>{showcase.title}</h3>
+                <p>{showcase.description}</p>
               </div>
-              <h3>Life Science Perspective</h3>
-              <p>Interactive cell mitosis process</p>
-            </div>
-            <div className="showcase-card">
-              <div className="showcase-visual">
-                <div className="heart-pump">
-                  <div className="heart-chamber" style={{ backgroundColor: '#36D399' }}></div>
-                  <div className="blood-flow"></div>
-                </div>
-              </div>
-              <h3>Technical Principle Analysis</h3>
-              <p>3D cardiovascular system demo</p>
-            </div>
-            <div className="showcase-card">
-              <div className="showcase-visual">
-                <div className="data-packets">
-                  {Array.from({length: 6}, (_, i) => (
-                    <div key={i} className="packet" style={{
-                      backgroundColor: '#FFD700',
-                      animationDelay: `${i * 0.3}s`
-                    }}></div>
-                  ))}
-                </div>
-              </div>
-              <h3>Knowledge Popularization Paradise</h3>
-              <p>Network packet visualization</p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Technology Empowerment (Brief Version) */}
+      {/* Technology Brief */}
       <section className="technology-brief">
         <div className="container">
           <h2>Technology Empowerment</h2>

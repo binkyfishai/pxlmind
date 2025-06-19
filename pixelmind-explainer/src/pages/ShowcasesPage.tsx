@@ -100,15 +100,10 @@ const ShowcasesPage: React.FC = () => {
   ];
 
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [expandedDemo, setExpandedDemo] = useState<string | null>(null);
 
   const filteredShowcases = selectedCategory === 'all'
     ? showcases
     : showcases.filter(showcase => showcase.category === selectedCategory);
-
-  const toggleDemo = (demoId: string) => {
-    setExpandedDemo(expandedDemo === demoId ? null : demoId);
-  };
 
   return (
     <div className="showcases-page">
@@ -164,15 +159,11 @@ const ShowcasesPage: React.FC = () => {
           <div className="showcases-grid">
             {filteredShowcases.map(showcase => {
               const DemoComponent = showcase.demoComponent;
-              const isExpanded = expandedDemo === showcase.id;
               
               return (
-                <div key={showcase.id} className={`showcase-card ${isExpanded ? 'expanded' : ''}`}>
+                <div key={showcase.id} className="showcase-card">
                   <div className="showcase-visual">
-                    <DemoComponent 
-                      height={isExpanded ? "500px" : "300px"}
-                      className="showcase-demo"
-                    />
+                    <DemoComponent height="400px" className="showcase-demo" />
                   </div>
                   <div className="text-content">
                     <h3>{showcase.title}</h3>
@@ -200,12 +191,6 @@ const ShowcasesPage: React.FC = () => {
                     </div>
 
                     <div className="showcase-actions">
-                      <button 
-                        className="expand-button"
-                        onClick={() => toggleDemo(showcase.id)}
-                      >
-                        {isExpanded ? 'Collapse Demo' : 'Expand Demo'}
-                      </button>
                       <button className="learn-more-button">Learn More</button>
                     </div>
                   </div>
