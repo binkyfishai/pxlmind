@@ -46,6 +46,10 @@ const HomePage: React.FC = () => {
     }
   ];
 
+  const handleExperienceNow = () => {
+    window.open('https://pixelmindpro.com/embed.html', '_blank');
+  };
+
   return (
     <>
       {/* Hero Section */}
@@ -58,8 +62,15 @@ const HomePage: React.FC = () => {
               into vivid, intuitive, and explorable pixelated scenarios.
             </p>
             <div className="button-group">
-              <button className="primary-button">Experience Now</button>
-              <button className="secondary-button">Watch Demo</button>
+              <button className="primary-button experience-now-btn" onClick={handleExperienceNow}>
+                <span className="btn-icon">🚀</span>
+                Experience Now
+                <span className="btn-glow"></span>
+              </button>
+              <button className="secondary-button">
+                <span className="btn-icon">▶️</span>
+                Watch Demo
+              </button>
             </div>
           </div>
           <div className="hero-visual">
@@ -77,6 +88,7 @@ const HomePage: React.FC = () => {
                   ></div>
                 ))}
               </div>
+              <div className="brain-aura"></div>
             </div>
           </div>
         </div>
