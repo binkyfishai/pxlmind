@@ -12,6 +12,25 @@ interface ShowcaseInfo {
   hint: string;
 }
 
+// Black Hole Demo Component
+const BlackHoleDemo: React.FC = () => {
+  return (
+    <div className="demo-container" style={{ width: '100%', height: '300px', position: 'relative' }}>
+      <iframe
+        src="/black-hole.html"
+        style={{
+          width: '100%',
+          height: '100%',
+          border: 'none',
+          borderRadius: '8px',
+          background: '#000'
+        }}
+        title="Black Hole Simulation"
+      />
+    </div>
+  );
+};
+
 const HomePage: React.FC = () => {
   const pixelColors = ['#165DFF', '#36D399', '#FF6B9B', '#FFD700', '#FF4500'];
 
@@ -43,6 +62,13 @@ const HomePage: React.FC = () => {
       description: 'DNA structure exploration',
       component: <DNADemo containerId="dna-demo-showcase" />,
       hint: '🧬 Explore DNA structure | 🔄 Rotate to inspect'
+    },
+    {
+      id: 'black-hole-physics',
+      title: 'Black Hole Physics',
+      description: 'Simulating matter at the edge of a black hole being sucked in - visualize particle-like matter dynamics to understand celestial phenomena',
+      component: <BlackHoleDemo />,
+      hint: '🌌 Drag to orbit | 🔍 Zoom to observe accretion disk'
     }
   ];
 
@@ -93,6 +119,54 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </main>
+
+      {/* AI-Generated Example Section */}
+      <section className="ai-example">
+        <div className="container">
+          <h2>AI-Generated 3D Visualization Example</h2>
+          <p className="section-subtitle">
+            When we enter the prompt: <em>"Simulating the matter at the edge of a black hole being sucked into the black hole"</em>, 
+            we can quickly generate a vivid 3D model.
+          </p>
+          
+          <div className="example-showcase">
+            <div className="example-visual">
+              <BlackHoleDemo />
+            </div>
+            <div className="example-description">
+              <h3>🌌 Black Hole Accretion Simulation</h3>
+              <p>
+                We can see that the particle-like matter is sucked into the black hole. 
+                We can use it to understand some physical celestial phenomena.
+              </p>
+              <div className="example-features">
+                <div className="feature-point">
+                  <span className="feature-bullet">✨</span>
+                  <p>Real-time particle dynamics simulation</p>
+                </div>
+                <div className="feature-point">
+                  <span className="feature-bullet">🎯</span>
+                  <p>Accurate gravitational physics modeling</p>
+                </div>
+                <div className="feature-point">
+                  <span className="feature-bullet">🎨</span>
+                  <p>Color-coded matter temperature visualization</p>
+                </div>
+              </div>
+              <div className="example-cta">
+                <p className="cta-text">
+                  <strong>Save your work as an HTML file and integrate it into your courseware.</strong> 
+                  We will also release a 3D editor to help you fine-tune the animation.
+                </p>
+                <button className="primary-button" onClick={handleExperienceNow}>
+                  <span className="btn-icon">🚀</span>
+                  Try Creating Your Own
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Problem Statement */}
       <section className="problem-statement">

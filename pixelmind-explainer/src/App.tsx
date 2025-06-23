@@ -68,6 +68,10 @@ function Navbar() {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
+  const handleTryExplainer = () => {
+    window.open('https://pixelmindpro.com/embed.html', '_blank');
+  };
+
   return (
     <>
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
@@ -96,7 +100,7 @@ function Navbar() {
                 {item.label}
               </Link>
             ))}
-            <button className="cta-button">Try the Explainer</button>
+            <button className="cta-button" onClick={handleTryExplainer}>Try the Explainer</button>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -123,7 +127,7 @@ function Navbar() {
             {item.label}
           </Link>
         ))}
-        <button className="cta-button">Try the Explainer</button>
+        <button className="cta-button" onClick={handleTryExplainer}>Try the Explainer</button>
       </div>
     </>
   );
