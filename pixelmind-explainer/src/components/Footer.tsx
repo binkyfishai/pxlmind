@@ -90,21 +90,9 @@ const Footer: React.FC = () => {
             <div className="footer-social">
               <h4>Follow Our Journey</h4>
               <div className="social-links">
-                <a href="https://twitter.com/pixelmind" className="social-link">
+                <a href="https://twitter.com/pixelmindpro" className="social-link">
                   <span>🐦</span>
                   <span>Twitter</span>
-                </a>
-                <a href="https://linkedin.com/company/pixelmind" className="social-link">
-                  <span>💼</span>
-                  <span>LinkedIn</span>
-                </a>
-                <a href="https://github.com/pixelmind" className="social-link">
-                  <span>💻</span>
-                  <span>GitHub</span>
-                </a>
-                <a href="https://youtube.com/pixelmind" className="social-link">
-                  <span>📺</span>
-                  <span>YouTube</span>
                 </a>
               </div>
             </div>

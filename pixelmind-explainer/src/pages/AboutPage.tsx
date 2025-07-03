@@ -195,21 +195,9 @@ const AboutPage: React.FC = () => {
             <div className="social-media">
               <h3>Follow Our Journey</h3>
               <div className="social-links">
-                <a href="#github" className="social-link">
-                  <span>💻</span>
-                  <span>GitHub</span>
-                </a>
-                <a href="#twitter" className="social-link">
+                <a href="https://twitter.com/pixelmindpro" className="social-link">
                   <span>🐦</span>
                   <span>Twitter/X</span>
-                </a>
-                <a href="#linkedin" className="social-link">
-                  <span>💼</span>
-                  <span>LinkedIn</span>
-                </a>
-                <a href="#discord" className="social-link">
-                  <span>💬</span>
-                  <span>Discord</span>
                 </a>
               </div>
             </div>
