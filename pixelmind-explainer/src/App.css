@@ -30,10 +30,30 @@ code {
   font-family: 'Pixeled', 'Courier New', monospace;
 }
 
-/* Navbar */
-.navbar {
+/* CA Header */
+.ca-header {
   position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  background-color: #165DFF;
+  color: #FFFFFF;
+  padding: 0.25rem 2rem;
+  z-index: 1001;
+  font-weight: bold;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.ca-header-content {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* Adjust navbar to account for CA header */
+.navbar {
+  position: fixed;
+  top: 28px;
   left: 0;
   right: 0;
   z-index: 1000;
@@ -213,7 +233,7 @@ code {
 
 .mobile-nav-overlay {
   position: fixed;
-  top: 0;
+  top: 28px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -964,16 +984,22 @@ code {
   /* Enhanced navbar for mobile */
   .navbar {
     padding: 0.75rem 1rem;
+    top: 28px;
   }
 
   .navbar.scrolled {
     background: rgba(30, 41, 59, 0.98);
     backdrop-filter: blur(15px);
   }
+  
+  /* Adjust mobile menu for CA header */
+  .mobile-nav-overlay {
+    top: 28px;
+  }
 
   /* Improved hero section for mobile */
   .hero {
-    padding: 6rem 0 4rem;
+    padding: 7rem 0 4rem;
     min-height: 90vh;
   }
 
@@ -1871,4 +1897,9 @@ html {
   .feature-point {
     margin-bottom: 0.75rem;
   }
+}
+
+/* Adjust page content to account for CA header */
+.hero, .page-hero {
+  padding-top: 120px;
 } 

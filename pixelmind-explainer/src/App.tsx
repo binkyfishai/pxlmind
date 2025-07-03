@@ -14,6 +14,17 @@ import AboutPage from './pages/AboutPage';
 import DocumentationPage from './pages/DocumentationPage';
 import Footer from './components/Footer';
 
+// CA Header Component
+function CAHeader() {
+  return (
+    <div className="ca-header">
+      <div className="ca-header-content">
+        CA:
+      </div>
+    </div>
+  );
+}
+
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -158,6 +169,7 @@ function App() {
     <Router>
       <div className="App">
         <LoadingProgress />
+        <CAHeader />
         <Navbar />
         
         <Routes>
