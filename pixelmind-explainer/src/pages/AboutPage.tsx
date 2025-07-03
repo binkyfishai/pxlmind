@@ -154,46 +154,11 @@ const AboutPage: React.FC = () => {
         </div>
       </section>
 
-      <section className="contact-section">
+      <section className="content-section">
         <div className="container">
-          <h2>Contact Us</h2>
-          <div className="contact-content">
-            <div className="contact-info">
-              <h3>Get in Touch</h3>
-              <p>
-                Have questions, suggestions, or want to collaborate? 
-                We'd love to hear from you.
-              </p>
-              
-              <div className="contact-methods">
-                <div className="contact-item">
-                  <span className="contact-icon">📧</span>
-                  <div>
-                    <h4>General Inquiries</h4>
-                    <a href="mailto:hello@pixelmind.ai">hello@pixelmind.ai</a>
-                  </div>
-                </div>
-                
-                <div className="contact-item">
-                  <span className="contact-icon">🎓</span>
-                  <div>
-                    <h4>Educational Partnerships</h4>
-                    <a href="mailto:education@pixelmind.ai">education@pixelmind.ai</a>
-                  </div>
-                </div>
-                
-                <div className="contact-item">
-                  <span className="contact-icon">🔧</span>
-                  <div>
-                    <h4>Technical Support</h4>
-                    <a href="mailto:support@pixelmind.ai">support@pixelmind.ai</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
+          <h2>Follow Our Journey</h2>
+          <div className="text-content">
             <div className="social-media">
-              <h3>Follow Our Journey</h3>
               <div className="social-links">
                 <a href="https://twitter.com/pixelmindpro" className="social-link">
                   <span>🐦</span>

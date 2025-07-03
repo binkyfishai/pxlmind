@@ -54,26 +54,6 @@ const Footer: React.FC = () => {
                   <li><Link to="/api">API Reference</Link></li>
                 </ul>
               </div>
-
-              <div className="footer-section">
-                <h4>Community</h4>
-                <ul>
-                  <li><a href="https://discord.gg/pixelmind">Discord</a></li>
-                  <li><a href="https://github.com/pixelmind">GitHub</a></li>
-                  <li><Link to="/discussions">Discussions</Link></li>
-                  <li><Link to="/contribute">Contribute</Link></li>
-                </ul>
-              </div>
-
-              <div className="footer-section">
-                <h4>Contact</h4>
-                <ul>
-                  <li><a href="mailto:hello@pixelmind.ai">hello@pixelmind.ai</a></li>
-                  <li><a href="mailto:support@pixelmind.ai">support@pixelmind.ai</a></li>
-                  <li><Link to="/partnerships">Partnerships</Link></li>
-                  <li><Link to="/press">Press Inquiries</Link></li>
-                </ul>
-              </div>
             </div>
           </div>
 
