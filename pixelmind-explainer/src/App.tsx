@@ -19,7 +19,7 @@ function CAHeader() {
   return (
     <div className="ca-header">
       <div className="ca-header-content">
-        CA:
+        CA: Ay3iyjTxEHEtWyscT3Qhjdvib91wxyWz5B1DKpJjpump
       </div>
     </div>
   );
