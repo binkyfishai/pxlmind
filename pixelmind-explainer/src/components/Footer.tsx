@@ -70,9 +70,9 @@ const Footer: React.FC = () => {
             <div className="footer-social">
               <h4>Follow Our Journey</h4>
               <div className="social-links">
-                <a href="https://twitter.com/pixelmindpro" className="social-link">
-                  <span>🐦</span>
-                  <span>Twitter</span>
+                <a href="https://twitter.com/pixelmind_pro" className="social-link">
+                                      <span>🐦</span>
+                    <span>X</span>
                 </a>
               </div>
             </div>

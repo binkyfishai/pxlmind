@@ -160,9 +160,9 @@ const AboutPage: React.FC = () => {
           <div className="text-content">
             <div className="social-media">
               <div className="social-links">
-                <a href="https://twitter.com/pixelmindpro" className="social-link">
+                <a href="https://twitter.com/pixelmind_pro" className="social-link">
                   <span>🐦</span>
-                  <span>Twitter/X</span>
+                  <span>X</span>
                 </a>
               </div>
             </div>
